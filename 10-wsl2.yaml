@@ -1,0 +1,15 @@
+# 只代理你想代理的进程；让 WSL2/系统代理 保持可控
+tun:
+  enable: true
+  stack: system
+  auto-route: true
+  auto-detect-interface: true
+  # 关键：从 TUN 路由里排除以下网段
+  route-exclude-address:
+    - 127.0.0.1/32       # 保留 Windows 系统代理的环回流量
+    - 192.168.31.0/24    # 你的 WSL2 出口网段（eth2）
+    - 100.64.0.0/10      # Tailscale
+    - 198.18.0.0/16      # Clash fake-ip 专用网段，避免自劫持
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
