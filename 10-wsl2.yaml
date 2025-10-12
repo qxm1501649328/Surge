@@ -1,18 +1,24 @@
-port: 7890
-socks-port: 7891
-allow-lan: true
-mode: Rule
-log-level: info
-external-controller: 127.0.0.1:9090
-
-
-# 只代理你想代理的进程；让 WSL2/系统代理 保持可控
+mode: rule
+mixed-port: 7897
+allow-lan: false
+log-level: warning
+ipv6: false
+external-controller: ''
+secret: set-your-secret
+unified-delay: true
+profile:
+  store-selected: true
 tun:
-  enable: true
-  stack: system
-  auto-route: true
   auto-detect-interface: true
-  # 关键：从 TUN 路由里排除以下网段
+  auto-route: true
+  device: Mihomo
+  dns-hijack:
+  - any:53
+  mtu: 1500
+  stack: mixed
+  strict-route: false
+  enable: true
+    # 关键：从 TUN 路由里排除以下网段
   route-exclude-address:
     - 127.0.0.1/32       # 保留 Windows 系统代理的环回流量
     - 192.168.31.0/24    # 你的 WSL2 出口网段（eth2）
@@ -21,3 +27,17 @@ tun:
     - 10.0.0.0/8
     - 172.16.0.0/12
     - 192.168.0.0/16
+external-controller-pipe: \\.\pipe\verge-mihomo
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+external-controller-cors:
+  allow-private-network: true
+  allow-origins:
+  - tauri://localhost
+  - http://tauri.localhost
+  - https://yacd.metacubex.one
+  - https://metacubex.github.io
+  - https://board.zash.run.place
